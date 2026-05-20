@@ -1,0 +1,1001 @@
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Sora:wght@300;400;600;700&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body, .root { font-family: 'Sora', sans-serif; }
+
+  .rapport {
+    background: #0a0e1a;
+    color: #e2e8f0;
+    min-height: 100vh;
+    padding: 0;
+    font-family: 'Sora', sans-serif;
+  }
+
+  .hero {
+    background: linear-gradient(135deg, #0a0e1a 0%, #0d1b2e 50%, #0a1628 100%);
+    border-bottom: 1px solid #1e3a5f;
+    padding: 2.5rem 2rem 2rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: radial-gradient(ellipse at 50% 0%, rgba(56,189,248,0.08) 0%, transparent 70%);
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(56,189,248,0.1);
+    border: 1px solid rgba(56,189,248,0.3);
+    color: #38bdf8;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 4px 14px;
+    border-radius: 20px;
+    margin-bottom: 1rem;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .hero h1 {
+    font-family: 'Sora', sans-serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #f0f9ff;
+    margin-bottom: 0.5rem;
+    line-height: 1.2;
+  }
+
+  .hero-sub {
+    font-size: 13px;
+    color: #64748b;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .tech-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    margin-top: 1.2rem;
+  }
+
+  .pill {
+    background: rgba(30,58,95,0.5);
+    border: 1px solid #1e3a5f;
+    color: #7dd3fc;
+    font-size: 10px;
+    font-weight: 600;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.05em;
+    padding: 3px 10px;
+    border-radius: 4px;
+  }
+
+  .content { padding: 1.5rem 1.5rem; max-width: 860px; margin: 0 auto; }
+
+  .section {
+    margin-bottom: 2rem;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 1.2rem;
+    padding-bottom: 0.7rem;
+    border-bottom: 1px solid #1e3a5f;
+  }
+
+  .step-num {
+    background: #38bdf8;
+    color: #0a0e1a;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    width: 26px;
+    height: 26px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .section-header h2 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #e2e8f0;
+    flex: 1;
+  }
+
+  .target-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 4px;
+    letter-spacing: 0.05em;
+  }
+
+  .badge-both { background: rgba(139,92,246,0.15); border: 1px solid rgba(139,92,246,0.3); color: #a78bfa; }
+  .badge-node1 { background: rgba(56,189,248,0.12); border: 1px solid rgba(56,189,248,0.3); color: #38bdf8; }
+  .badge-test { background: rgba(34,197,94,0.12); border: 1px solid rgba(34,197,94,0.3); color: #4ade80; }
+
+  /* CLUSTER VISUAL */
+  .cluster-visual {
+    background: #0d1420;
+    border: 1px solid #1e3a5f;
+    border-radius: 12px;
+    padding: 1.5rem 1rem;
+    margin-bottom: 1.5rem;
+    position: relative;
+  }
+
+  .cluster-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: #475569;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 1.2rem;
+    text-align: center;
+  }
+
+  .nodes-row {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    justify-content: center;
+  }
+
+  .node-card {
+    background: #111827;
+    border: 1px solid #1e3a5f;
+    border-radius: 10px;
+    padding: 1.2rem 1.2rem;
+    flex: 1;
+    max-width: 240px;
+    position: relative;
+  }
+
+  .node-card.active { border-color: #38bdf8; }
+  .node-card.standby { border-color: #334155; }
+
+  .node-status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 6px;
+  }
+  .dot-online { background: #4ade80; box-shadow: 0 0 6px rgba(74,222,128,0.5); }
+  .dot-standby { background: #64748b; }
+
+  .node-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: #475569;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+  }
+
+  .node-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #f0f9ff;
+    margin-bottom: 4px;
+  }
+
+  .node-ip {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: #38bdf8;
+    margin-bottom: 12px;
+  }
+
+  .node-services {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .svc-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    font-weight: 600;
+    padding: 2px 7px;
+    border-radius: 3px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    width: fit-content;
+  }
+
+  .svc-running { background: rgba(74,222,128,0.1); border: 1px solid rgba(74,222,128,0.2); color: #4ade80; }
+  .svc-wait { background: rgba(100,116,139,0.1); border: 1px solid rgba(100,116,139,0.2); color: #64748b; }
+  .svc-vip { background: rgba(251,191,36,0.1); border: 1px solid rgba(251,191,36,0.2); color: #fbbf24; }
+
+  .pc-icon {
+    margin-bottom: 10px;
+  }
+
+  .connector-zone {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0 1rem;
+    gap: 8px;
+    min-width: 100px;
+  }
+
+  .corosync-line {
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, #38bdf8, #7c3aed, #38bdf8);
+    border-radius: 1px;
+    position: relative;
+  }
+
+  .corosync-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: #7c3aed;
+    text-align: center;
+    letter-spacing: 0.05em;
+  }
+
+  .vip-bubble {
+    background: rgba(251,191,36,0.08);
+    border: 1px solid rgba(251,191,36,0.25);
+    border-radius: 8px;
+    padding: 8px 14px;
+    text-align: center;
+    margin-top: 6px;
+  }
+
+  .vip-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: #475569;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .vip-addr {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    font-weight: 700;
+    color: #fbbf24;
+  }
+
+  /* SUB-STEPS */
+  .sub-step {
+    margin-bottom: 1rem;
+  }
+
+  .sub-step-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: #94a3b8;
+    margin-bottom: 0.6rem;
+    font-family: 'JetBrains Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  /* NODE CONTEXT BLOCKS */
+  .node-context {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 1rem;
+  }
+
+  .node-block {
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .node-block-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+  }
+
+  .nb-n1 .node-block-header { background: rgba(56,189,248,0.12); color: #38bdf8; border: 1px solid rgba(56,189,248,0.2); border-bottom: none; }
+  .nb-n2 .node-block-header { background: rgba(139,92,246,0.1); color: #a78bfa; border: 1px solid rgba(139,92,246,0.2); border-bottom: none; }
+  .nb-both .node-block-header { background: rgba(100,116,139,0.1); color: #94a3b8; border: 1px solid rgba(100,116,139,0.2); border-bottom: none; grid-column: span 2; }
+
+  .nb-n1 { grid-column: 1; }
+  .nb-n2 { grid-column: 2; }
+  .nb-both { grid-column: span 2; }
+
+  .code-block {
+    background: #060b14;
+    border: 1px solid #1e3a5f;
+    border-radius: 0 0 8px 8px;
+    padding: 10px 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    line-height: 1.7;
+    color: #cbd5e1;
+    overflow-x: auto;
+    white-space: pre;
+  }
+
+  .nb-n1 .code-block { border-color: rgba(56,189,248,0.2); }
+  .nb-n2 .code-block { border-color: rgba(139,92,246,0.2); }
+
+  .code-comment { color: #334155; }
+  .code-cmd { color: #7dd3fc; }
+  .code-arg { color: #a78bfa; }
+  .code-val { color: #4ade80; }
+  .code-kw { color: #f59e0b; }
+  .code-yaml-key { color: #38bdf8; }
+  .code-yaml-val { color: #4ade80; }
+
+  /* Single full-width code block */
+  .code-full {
+    background: #060b14;
+    border: 1px solid #1e3a5f;
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    line-height: 1.7;
+    color: #cbd5e1;
+    overflow-x: auto;
+    white-space: pre;
+    margin-bottom: 10px;
+  }
+
+  /* INFO BOX */
+  .info-box {
+    background: rgba(56,189,248,0.05);
+    border: 1px solid rgba(56,189,248,0.15);
+    border-left: 3px solid #38bdf8;
+    border-radius: 0 6px 6px 0;
+    padding: 10px 14px;
+    margin-bottom: 10px;
+    font-size: 12px;
+    color: #94a3b8;
+    line-height: 1.6;
+  }
+
+  .warn-box {
+    background: rgba(251,191,36,0.05);
+    border: 1px solid rgba(251,191,36,0.15);
+    border-left: 3px solid #fbbf24;
+    border-radius: 0 6px 6px 0;
+    padding: 10px 14px;
+    margin-bottom: 10px;
+    font-size: 12px;
+    color: #94a3b8;
+    line-height: 1.6;
+  }
+
+  /* CAPTURE ZONE */
+  .capture-zone {
+    border: 1.5px dashed #1e3a5f;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(10,14,26,0.5);
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+
+  .capture-zone:hover { border-color: #38bdf8; }
+
+  .capture-icon {
+    width: 36px;
+    height: 36px;
+    background: rgba(56,189,248,0.1);
+    border: 1px solid rgba(56,189,248,0.2);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 16px;
+  }
+
+  .capture-text { flex: 1; }
+  .capture-text strong { font-size: 12px; font-weight: 600; color: #7dd3fc; display: block; margin-bottom: 2px; }
+  .capture-text span { font-size: 11px; color: #475569; font-family: 'JetBrains Mono', monospace; }
+
+  .capture-uploaded {
+    background: rgba(74,222,128,0.08);
+    border-color: rgba(74,222,128,0.3);
+  }
+
+  /* TEST SECTION */
+  .test-scenario {
+    background: #0d1420;
+    border: 1px solid #1e3a5f;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 1rem;
+  }
+
+  .test-header {
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid #1e3a5f;
+  }
+
+  .test-header.ok { background: rgba(74,222,128,0.05); }
+  .test-header.fail { background: rgba(239,68,68,0.05); }
+
+  .test-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .test-label.ok { color: #4ade80; }
+  .test-label.fail { color: #f87171; }
+
+  .test-body { padding: 12px 14px; }
+
+  .expected-result {
+    background: rgba(74,222,128,0.05);
+    border: 1px solid rgba(74,222,128,0.15);
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: #86efac;
+    margin-top: 8px;
+    line-height: 1.6;
+  }
+
+  .result-label {
+    font-size: 9px;
+    font-weight: 700;
+    color: #4ade80;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 4px;
+  }
+
+  hr.sep { border: none; border-top: 1px solid #1e3a5f; margin: 1.5rem 0; }
+
+  .node-diagram {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    margin: 1rem 0;
+  }
+
+  /* Scrollable wrapper */
+  .widget-root {
+    background: #0a0e1a;
+    min-height: 100vh;
+  }
+
+  .capture-real {
+    border: 1.5px solid #1e3a5f;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-top: 12px;
+    background: #0d1420;
+  }
+  .capture-real-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    background: rgba(56,189,248,0.07);
+    border-bottom: 1px solid #1e3a5f;
+    font-size: 12px;
+    font-weight: 600;
+    color: #7dd3fc;
+    font-family: 'Sora', sans-serif;
+  }
+  .capture-real-body { padding: 10px; }
+  .capture-real-caption {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: #475569;
+    margin-top: 6px;
+    text-align: center;
+    letter-spacing: 0.03em;
+    line-height: 1.5;
+  }
+  .cap-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .cap-col { display: flex; flex-direction: column; gap: 6px; }
+  .cap-sublabel {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: #334155;
+    text-align: center;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 2px;
+  }
+  .cap-img {
+    width: 100%;
+    border-radius: 6px;
+    border: 1px solid #1e3a5f;
+    display: block;
+    cursor: zoom-in;
+    transition: opacity 0.15s;
+  }
+  .cap-img:hover { opacity: 0.88; }
+
+  /* Lightbox */
+  #lb-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.88);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+    cursor: zoom-out;
+  }
+  #lb-overlay.open { display: flex; }
+  #lb-img {
+    max-width: 92vw;
+    max-height: 92vh;
+    border-radius: 8px;
+    box-shadow: 0 0 60px rgba(0,0,0,0.8);
+    object-fit: contain;
+    cursor: default;
+  }
+  #lb-close {
+    position: fixed;
+    top: 18px; right: 22px;
+    font-size: 28px;
+    color: #94a3b8;
+    cursor: pointer;
+    background: none;
+    border: none;
+    font-family: monospace;
+    line-height: 1;
+  }
+  #lb-close:hover { color: #f0f9ff; }
+</style>
+
+<div class="widget-root">
+<div id="lb-overlay" onclick="if(event.target===this)this.classList.remove('open')">
+  <button id="lb-close" onclick="document.getElementById('lb-overlay').classList.remove('open')">✕</button>
+  <img id="lb-img" src="" alt="" onclick="event.stopPropagation()"/>
+</div>
+<script>
+function lbOpen(src){ document.getElementById('lb-img').src=src; document.getElementById('lb-overlay').classList.add('open'); }
+document.addEventListener('keydown',function(e){ if(e.key==='Escape') document.getElementById('lb-overlay').classList.remove('open'); });
+</script>
+
+<div class="rapport">
+
+  <div class="hero">
+    <div class="hero-badge">
+      <i class="ti ti-server" aria-hidden="true"></i>
+      Rapport Technique
+    </div>
+    <h1>Cluster Web Haute Disponibilité</h1>
+    <p style="font-size:13px; color:#475569; margin:4px 0 0; font-family:'JetBrains Mono',monospace;">Ubuntu 24.04 LTS · Pacemaker / Corosync · Apache2</p>
+    <div class="tech-pills">
+      <span class="pill">Pacemaker</span>
+      <span class="pill">Corosync</span>
+      <span class="pill">PCS</span>
+      <span class="pill">Apache2</span>
+      <span class="pill">Netplan</span>
+      <span class="pill">IPaddr2</span>
+      <span class="pill">STONITH</span>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- ARCHITECTURE -->
+    <div class="section">
+      <div class="section-header">
+        <div class="step-num"><i class="ti ti-topology-star" style="font-size:13px" aria-hidden="true"></i></div>
+        <h2>Architecture cible</h2>
+      </div>
+
+      <div class="cluster-visual">
+        <div class="cluster-title">Infrastructure · mycluster</div>
+
+        <div style="text-align:center; margin-bottom:12px;">
+          <div class="vip-bubble" style="display:inline-block;">
+            <div class="vip-label">IP Virtuelle flottante (VIP)</div>
+            <div class="vip-addr">192.168.1.100/24</div>
+          </div>
+        </div>
+
+        <div style="text-align:center; font-size:11px; color:#334155; font-family:'JetBrains Mono',monospace; margin-bottom:10px;">▼ bascule automatique ▼</div>
+
+        <div class="nodes-row">
+          <!-- NODE 1 -->
+          <div class="node-card active">
+            <div class="node-label"><span class="node-status-dot dot-online"></span> NŒUD MAÎTRE</div>
+            <div style="font-size:28px; margin-bottom:6px;">🖥️</div>
+            <div class="node-name">node1</div>
+            <div class="node-ip">192.168.1.10/24</div>
+            <div class="node-services">
+              <span class="svc-badge svc-running"><i class="ti ti-circle-filled" style="font-size:6px" aria-hidden="true"></i> pacemaker</span>
+              <span class="svc-badge svc-running"><i class="ti ti-circle-filled" style="font-size:6px" aria-hidden="true"></i> corosync</span>
+              <span class="svc-badge svc-vip"><i class="ti ti-circle-filled" style="font-size:6px" aria-hidden="true"></i> VIP active ici</span>
+              <span class="svc-badge svc-running"><i class="ti ti-circle-filled" style="font-size:6px" aria-hidden="true"></i> apache2</span>
+            </div>
+          </div>
+
+          <!-- CONNECTOR -->
+          <div class="connector-zone">
+            <div class="corosync-line"></div>
+            <div class="corosync-label">COROSYNC<br>heartbeat</div>
+            <div class="corosync-line"></div>
+          </div>
+
+          <!-- NODE 2 -->
+          <div class="node-card standby">
+            <div class="node-label"><span class="node-status-dot dot-standby"></span> NŒUD ESCLAVE</div>
+            <div style="font-size:28px; margin-bottom:6px;">🖥️</div>
+            <div class="node-name">node2</div>
+            <div class="node-ip">192.168.1.11/24</div>
+            <div class="node-services">
+              <span class="svc-badge svc-running"><i class="ti ti-circle-filled" style="font-size:6px" aria-hidden="true"></i> pacemaker</span>
+              <span class="svc-badge svc-running"><i class="ti ti-circle-filled" style="font-size:6px" aria-hidden="true"></i> corosync</span>
+              <span class="svc-badge svc-wait"><i class="ti ti-circle-filled" style="font-size:6px" aria-hidden="true"></i> VIP en attente</span>
+              <span class="svc-badge svc-wait"><i class="ti ti-circle-filled" style="font-size:6px" aria-hidden="true"></i> apache2 (prêt)</span>
+            </div>
+          </div>
+        </div>
+
+<div class="capture-real">
+      <div class="capture-real-header">📸 Topologie réseau / VMs — VMware Workstation</div>
+      <div class="capture-real-body">
+        <div><img class="cap-img" src="0.png" alt="" onclick="lbOpen(this.src)"/></div>
+        <div class="capture-real-caption">Groupe « CLUSTER LINUX » · Ubuntu 02 (node1) et Ubuntu 03 (node2) — état : Sous tension</div>
+      </div>
+    </div>
+      </div>
+    </div>
+
+    <!-- ETAPE 1 -->
+    <div class="section">
+      <div class="section-header">
+        <div class="step-num">1</div>
+        <h2>Préparation de la base système</h2>
+        <span class="target-badge badge-both">sur les 2 nœuds</span>
+      </div>
+
+      <div class="sub-step">
+        <div class="sub-step-title">1.1 — Nommage des machines (hostname)</div>
+        <div class="node-context">
+          <div class="node-block nb-n1">
+            <div class="node-block-header"><i class="ti ti-terminal" style="font-size:12px" aria-hidden="true"></i> NODE 1</div>
+            <div class="code-block"><span class="code-cmd">sudo</span> <span class="code-arg">hostnamectl</span> set-hostname node1
+exec bash</div>
+          </div>
+          <div class="node-block nb-n2">
+            <div class="node-block-header"><i class="ti ti-terminal" style="font-size:12px" aria-hidden="true"></i> NODE 2</div>
+            <div class="code-block"><span class="code-cmd">sudo</span> <span class="code-arg">hostnamectl</span> set-hostname node2
+exec bash</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sub-step">
+        <div class="sub-step-title">1.2 — Configuration réseau statique (Netplan)</div>
+        <div class="info-box"><i class="ti ti-info-circle" aria-hidden="true"></i> Désactiver d'abord la config temporaire cloud-init si elle existe : <code style="color:#38bdf8">sudo mv /etc/netplan/50-cloud-init.yaml /etc/netplan/50-cloud-init.yaml.bak 2>/dev/null</code></div>
+        <div style="margin-bottom:6px; font-size:11px; color:#475569; font-family:'JetBrains Mono',monospace;">Fichier : /etc/netplan/01-network-manager-all.yaml</div>
+        <div class="node-context">
+          <div class="node-block nb-n1">
+            <div class="node-block-header"><i class="ti ti-file-code" style="font-size:12px" aria-hidden="true"></i> NODE 1 · 192.168.1.10</div>
+            <div class="code-block"><span class="code-yaml-key">network:</span>
+  <span class="code-yaml-key">version:</span> <span class="code-yaml-val">2</span>
+  <span class="code-yaml-key">renderer:</span> <span class="code-yaml-val">networkd</span>
+  <span class="code-yaml-key">ethernets:</span>
+    <span class="code-yaml-key">ens33:</span>
+      <span class="code-yaml-key">dhcp4:</span> <span class="code-yaml-val">no</span>
+      <span class="code-yaml-key">addresses:</span>
+        - <span class="code-yaml-val">192.168.1.10/24</span>
+      <span class="code-yaml-key">routes:</span>
+        - <span class="code-yaml-key">to:</span> <span class="code-yaml-val">default</span>
+          <span class="code-yaml-key">via:</span> <span class="code-yaml-val">192.168.1.1</span>
+      <span class="code-yaml-key">nameservers:</span>
+        <span class="code-yaml-key">addresses:</span> <span class="code-yaml-val">[8.8.8.8, 1.1.1.1]</span></div>
+          </div>
+          <div class="node-block nb-n2">
+            <div class="node-block-header"><i class="ti ti-file-code" style="font-size:12px" aria-hidden="true"></i> NODE 2 · 192.168.1.11</div>
+            <div class="code-block"><span class="code-yaml-key">network:</span>
+  <span class="code-yaml-key">version:</span> <span class="code-yaml-val">2</span>
+  <span class="code-yaml-key">renderer:</span> <span class="code-yaml-val">networkd</span>
+  <span class="code-yaml-key">ethernets:</span>
+    <span class="code-yaml-key">ens33:</span>
+      <span class="code-yaml-key">dhcp4:</span> <span class="code-yaml-val">no</span>
+      <span class="code-yaml-key">addresses:</span>
+        - <span class="code-yaml-val">192.168.1.11/24</span>
+      <span class="code-yaml-key">routes:</span>
+        - <span class="code-yaml-key">to:</span> <span class="code-yaml-val">default</span>
+          <span class="code-yaml-key">via:</span> <span class="code-yaml-val">192.168.1.1</span>
+      <span class="code-yaml-key">nameservers:</span>
+        <span class="code-yaml-key">addresses:</span> <span class="code-yaml-val">[8.8.8.8, 1.1.1.1]</span></div>
+          </div>
+        </div>
+        <div class="code-full"><span class="code-comment"># Appliquer sur chaque machine</span>
+<span class="code-cmd">sudo</span> netplan apply</div>
+      </div>
+
+      <div class="sub-step">
+        <div class="sub-step-title">1.3 — Résolution de noms locale (/etc/hosts)</div>
+        <div class="info-box">Ajouter ces lignes à la fin de <code style="color:#38bdf8">/etc/hosts</code> sur les deux machines pour la communication inter-nœuds sans DNS externe.</div>
+        <div class="code-full">192.168.1.10   node1
+192.168.1.11   node2</div>
+      </div>
+
+<div class="capture-real">
+      <div class="capture-real-header">📸 /etc/hosts commun + hostnamectl && ip a — node1</div>
+      <div class="capture-real-body">
+        <div class="cap-grid-2"><div class="cap-col"><div><div class="cap-sublabel">nano /etc/hosts</div><img class="cap-img" src="1.png" alt="" onclick="lbOpen(this.src)"/></div></div><div class="cap-col"><div><div class="cap-sublabel">hostnamectl && ip a show ens33 — node1</div><img class="cap-img" src="5.png" alt="" onclick="lbOpen(this.src)"/></div></div></div>
+        <div class="capture-real-caption">Gauche : nano /etc/hosts → 192.168.1.10 node1 / 192.168.1.11 node2 · Droite : hostnamectl (node1, Ubuntu 24.04.2 LTS) + ip a ens33 → 192.168.1.10/24 (physique) + 192.168.1.100/24 (VIP secondaire)</div>
+      </div>
+    </div>
+    </div>
+
+    <!-- ETAPE 2 -->
+    <div class="section">
+      <div class="section-header">
+        <div class="step-num">2</div>
+        <h2>Installation et initialisation des services</h2>
+        <span class="target-badge badge-both">sur les 2 nœuds</span>
+      </div>
+
+      <div class="sub-step">
+        <div class="sub-step-title">2.1 — Installation des paquets</div>
+        <div class="code-full"><span class="code-cmd">sudo</span> apt update
+<span class="code-cmd">sudo</span> apt install pacemaker corosync pcs apache2 \
+  resource-agents-base resource-agents-extra <span class="code-arg">-y</span></div>
+      </div>
+
+      <div class="sub-step">
+        <div class="sub-step-title">2.2 — Désactivation d'Apache (géré par Pacemaker)</div>
+        <div class="warn-box"><i class="ti ti-alert-triangle" aria-hidden="true"></i> Apache doit être contrôlé exclusivement par Pacemaker, pas par systemd. Ne pas le laisser démarrer automatiquement.</div>
+        <div class="code-full"><span class="code-cmd">sudo</span> systemctl stop apache2
+<span class="code-cmd">sudo</span> systemctl disable apache2</div>
+      </div>
+
+      <div class="sub-step">
+        <div class="sub-step-title">2.3 — Activation de pcsd + mot de passe hacluster</div>
+        <div class="code-full"><span class="code-cmd">sudo</span> systemctl enable <span class="code-arg">--now</span> pcsd
+<span class="code-cmd">sudo</span> passwd hacluster     <span class="code-comment"># même mot de passe sur les 2 nœuds !</span></div>
+      </div>
+
+<div class="capture-real">
+      <div class="capture-real-header">📸 sudo systemctl status pcsd — node1 & node2</div>
+      <div class="capture-real-body">
+        <div class="cap-grid-2"><div class="cap-col"><div><div class="cap-sublabel">node1 (Ubuntu 02)</div><img class="cap-img" src="6.png" alt="" onclick="lbOpen(this.src)"/></div></div><div class="cap-col"><div><div class="cap-sublabel">node2 (Ubuntu 03)</div><img class="cap-img" src="13.png" alt="" onclick="lbOpen(this.src)"/></div></div></div>
+        <div class="capture-real-caption">node1 : pcsd active (running) depuis 18:04:33 · node2 : pcsd active (running) depuis 18:23:42 — enabled sur les deux nœuds</div>
+      </div>
+    </div>
+    </div>
+
+    <!-- ETAPE 3 -->
+    <div class="section">
+      <div class="section-header">
+        <div class="step-num">3</div>
+        <h2>Création et initialisation du cluster</h2>
+        <span class="target-badge badge-node1">node1 uniquement</span>
+      </div>
+
+      <div class="sub-step">
+        <div class="sub-step-title">3.1 — Authentification des nœuds</div>
+        <div class="code-full"><span class="code-cmd">sudo</span> pcs host auth node1 node2 <span class="code-arg">-u</span> hacluster</div>
+      </div>
+
+      <div class="sub-step">
+        <div class="sub-step-title">3.2 — Génération de la config Corosync + création du cluster</div>
+        <div class="code-full"><span class="code-cmd">sudo</span> pcs cluster setup mycluster \
+  node1 <span class="code-arg">addr=</span><span class="code-val">192.168.1.10</span> \
+  node2 <span class="code-arg">addr=</span><span class="code-val">192.168.1.11</span> \
+  <span class="code-arg">--force</span></div>
+      </div>
+
+      <div class="sub-step">
+        <div class="sub-step-title">3.3 — Démarrage et activation automatique</div>
+        <div class="code-full"><span class="code-cmd">sudo</span> pcs cluster start <span class="code-arg">--all</span>
+<span class="code-cmd">sudo</span> pcs cluster enable <span class="code-arg">--all</span></div>
+      </div>
+
+<div class="capture-real">
+      <div class="capture-real-header">📸 pcs host auth node1 node2 -u hacluster + pcs cluster start --all</div>
+      <div class="capture-real-body">
+        <div class="cap-grid-2"><div class="cap-col"><div><div class="cap-sublabel">pcs host auth → Authorized</div><img class="cap-img" src="7.png" alt="" onclick="lbOpen(this.src)"/></div></div><div class="cap-col"><div><div class="cap-sublabel">pcs cluster start --all</div><img class="cap-img" src="8.png" alt="" onclick="lbOpen(this.src)"/></div></div></div>
+        <div class="capture-real-caption">Gauche : node1: Authorized, node2: Authorized · Droite : node1: Starting Cluster... node2: Starting Cluster...</div>
+      </div>
+    </div>
+    </div>
+
+    <!-- ETAPE 4 -->
+    <div class="section">
+      <div class="section-header">
+        <div class="step-num">4</div>
+        <h2>Configuration des propriétés et ressources</h2>
+        <span class="target-badge badge-node1">node1 uniquement</span>
+      </div>
+
+      <div class="sub-step">
+        <div class="sub-step-title">4.1 — Propriétés STONITH et Quorum</div>
+        <div class="warn-box"><i class="ti ti-alert-triangle" aria-hidden="true"></i> Dans un environnement de démo/virtuel sans matériel STONITH, ces ajustements sont requis pour 2 nœuds uniquement.</div>
+        <div class="code-full"><span class="code-comment"># Désactiver la protection matérielle STONITH</span>
+<span class="code-cmd">sudo</span> pcs property set <span class="code-arg">stonith-enabled=</span><span class="code-val">false</span>
+
+<span class="code-comment"># Permettre au nœud restant de fonctionner seul</span>
+<span class="code-cmd">sudo</span> pcs property set <span class="code-arg">no-quorum-policy=</span><span class="code-val">ignore</span></div>
+      </div>
+
+      <div class="sub-step">
+        <div class="sub-step-title">4.2 — Création des ressources</div>
+        <div class="code-full"><span class="code-comment"># Ressource 1 : IP Virtuelle flottante (VIP)</span>
+<span class="code-cmd">sudo</span> pcs resource create vip ocf:heartbeat:IPaddr2 \
+  <span class="code-arg">ip=</span><span class="code-val">192.168.1.100</span> \
+  <span class="code-arg">cidr_netmask=</span><span class="code-val">24</span> \
+  <span class="code-arg">op</span> monitor interval=30s
+
+<span class="code-comment"># Ressource 2 : Serveur Web Apache</span>
+<span class="code-cmd">sudo</span> pcs resource create webserver ocf:heartbeat:apache \
+  <span class="code-arg">configfile=</span><span class="code-val">"/etc/apache2/apache2.conf"</span> \
+  <span class="code-arg">op</span> monitor interval=30s</div>
+      </div>
+
+      <div class="sub-step">
+        <div class="sub-step-title">4.3 — Groupement et contrainte de localisation</div>
+        <div class="info-box"><i class="ti ti-info-circle" aria-hidden="true"></i> Le groupe garantit que la VIP et Apache basculent toujours ensemble sur le même nœud physique.</div>
+        <div class="code-full"><span class="code-comment"># Regrouper vip + webserver → webgroup</span>
+<span class="code-cmd">sudo</span> pcs resource group add webgroup vip webserver
+
+<span class="code-comment"># Préférence pour node1 en fonctionnement normal</span>
+<span class="code-cmd">sudo</span> pcs constraint location webgroup <span class="code-arg">prefers</span> <span class="code-val">node1=100</span></div>
+      </div>
+
+<div class="capture-real">
+      <div class="capture-real-header">📸 sudo pcs status — état nominal (node1 maître)</div>
+      <div class="capture-real-body">
+        <div><img class="cap-img" src="9.png" alt="" onclick="lbOpen(this.src)"/></div>
+        <div class="capture-real-caption">Cluster mycluster · Current DC: node1 · node1 Online, node2 Online · webgroup : vip (IPaddr2) + webserver (apache) Started node1</div>
+      </div>
+    </div>
+    </div>
+
+    <!-- ETAPE 5 - TESTS -->
+    <div class="section">
+      <div class="section-header">
+        <div class="step-num">5</div>
+        <h2>Tests de validation — Haute Disponibilité</h2>
+        <span class="target-badge badge-test">cahier de recette</span>
+      </div>
+
+      <!-- TEST 1 -->
+      <div class="test-scenario">
+        <div class="test-header ok">
+          <i class="ti ti-circle-check" style="color:#4ade80; font-size:16px" aria-hidden="true"></i>
+          <div>
+            <div class="test-label ok">Test 1 · Fonctionnement nominal</div>
+            <div style="font-size:11px; color:#475569; font-family:'JetBrains Mono',monospace; margin-top:2px;">Les deux machines sont actives — situation normale</div>
+          </div>
+        </div>
+        <div class="test-body">
+          <div style="font-size:11px; color:#64748b; margin-bottom:6px;">Commande (sur n'importe quel nœud) :</div>
+          <div class="code-full" style="margin-bottom:8px;"><span class="code-cmd">sudo</span> pcs status</div>
+          <div class="expected-result">
+            <div class="result-label">✓ Résultat attendu</div>
+Node List:
+  • node1: <span style="color:#4ade80">Online</span>
+  • node2: <span style="color:#4ade80">Online</span>
+
+Full List of Resources:
+  Resource Group: webgroup
+    vip        (ocf::heartbeat:IPaddr2):  <span style="color:#4ade80">Started node1</span>
+    webserver  (ocf::heartbeat:apache):   <span style="color:#4ade80">Started node1</span></div>
+          <div style="margin-top:10px; font-size:12px; color:#475569;">Test web : accéder à <span style="color:#38bdf8; font-family:'JetBrains Mono',monospace;">http://192.168.1.100</span> → page Apache par défaut via node1</div>
+        </div>
+      </div>
+
+<div class="capture-real">
+      <div class="capture-real-header">📸 Test 1 — pcs status + navigateur http://192.168.1.100</div>
+      <div class="capture-real-body">
+        <div style="margin-bottom:8px;"><img class="cap-img" src="9.png" alt="" onclick="lbOpen(this.src)"/></div><div style="margin-bottom:8px;"><img class="cap-img" src="10.png" alt="" onclick="lbOpen(this.src)"/></div>
+        <div class="capture-real-caption">node1 Online, node2 Online, webgroup Started node1 · Apache2 Default Page « It works! » sur la VIP 192.168.1.100</div>
+      </div>
+    </div>
+
+      <div style="height:1rem"></div>
+
+      <!-- TEST 2 -->
+      <div class="test-scenario">
+        <div class="test-header fail">
+          <i class="ti ti-alert-circle" style="color:#f87171; font-size:16px" aria-hidden="true"></i>
+          <div>
+            <div class="test-label fail">Test 2 · Simulation de panne — Basculement (Failover)</div>
+            <div style="font-size:11px; color:#475569; font-family:'JetBrains Mono',monospace; margin-top:2px;">Couper pacemaker sur node1 → vérifier la migration vers node2</div>
+          </div>
+        </div>
+        <div class="test-body">
+
+          <div style="font-size:11px; color:#64748b; margin-bottom:6px;">Étape 1 · Simuler la panne sur node1 :</div>
+          <div class="code-full" style="margin-bottom:8px;"><span class="code-comment"># Exécuter sur NODE 1</span>
+<span class="code-cmd">sudo</span> systemctl stop pacemaker</div>
+
+          <div style="font-size:11px; color:#64748b; margin-bottom:6px;">Étape 2 · Vérifier le basculement sur node2 :</div>
+          <div class="code-full" style="margin-bottom:8px;"><span class="code-comment"># Exécuter sur NODE 2</span>
+<span class="code-cmd">sudo</span> pcs status
+ip a show ens33    <span class="code-comment"># doit afficher 192.168.1.100/24</span></div>
+
+          <div class="expected-result">
+            <div class="result-label">✓ Résultat attendu sur node2</div>
+Node List:
+  • node1: <span style="color:#f87171">OFFLINE</span>
+  • node2: <span style="color:#4ade80">Online</span>
+
+Full List of Resources:
+  Resource Group: webgroup
+    vip        (ocf::heartbeat:IPaddr2):  <span style="color:#fbbf24">Started node2</span>  ← migré !
+    webserver  (ocf::heartbeat:apache):   <span style="color:#fbbf24">Started node2</span>  ← migré !</div>
+
+          <div style="margin-top:10px; font-size:12px; color:#475569;">Test web : <span style="color:#38bdf8; font-family:'JetBrains Mono',monospace;">http://192.168.1.100</span> reste accessible → node2 répond de manière transparente</div>
+        </div>
+      </div>
+
+<div class="capture-real">
+      <div class="capture-real-header">📸 Test 2 — Failover : stop pacemaker node1 → basculement sur node2</div>
+      <div class="capture-real-body">
+        <div class="cap-grid-2"><div class="cap-col"><div><div class="cap-sublabel">Étape 1 — stop pacemaker node1</div><img class="cap-img" src="11.png" alt="" onclick="lbOpen(this.src)"/></div><div><div class="cap-sublabel">Étape 2 — hostnamectl node2</div><img class="cap-img" src="12.png" alt="" onclick="lbOpen(this.src)"/></div></div><div class="cap-col"><div><div class="cap-sublabel">Étape 3 — pcs status (basculement)</div><img class="cap-img" src="14.png" alt="" onclick="lbOpen(this.src)"/></div><div><div class="cap-sublabel">Étape 4 — pcs status + ip a (VIP migrée)</div><img class="cap-img" src="15.png" alt="" onclick="lbOpen(this.src)"/></div></div></div>
+        <div class="capture-real-caption">Étape 1 (node1) : pacemaker stoppé → Connection to cluster failed · Étape 2 (node2) : hostnamectl → node2, 192.168.1.11 · Étape 3 : pcs status → node1 OFFLINE, webgroup Started node2 · Étape 4 : pcs status + ip a → VIP 192.168.1.100 active sur ens33 de node2</div>
+      </div>
+    </div>
+
+<div class="capture-real">
+      <div class="capture-real-header">📸 Résultat final — http://192.168.1.100 toujours accessible (node1 OFFLINE)</div>
+      <div class="capture-real-body">
+        <div><img class="cap-img" src="16.png" alt="" onclick="lbOpen(this.src)"/></div>
+        <div class="capture-real-caption">Apache2 « It works! » servi par node2 via la VIP 192.168.1.100 — haute disponibilité validée ✓</div>
+      </div>
+    </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div style="text-align:center; padding:1.5rem 0; border-top:1px solid #1e3a5f; margin-top:1rem;">
+      <div style="font-family:'JetBrains Mono',monospace; font-size:10px; color:#334155; letter-spacing:0.1em; text-transform:uppercase;">Rapport Technique · Cluster HA · Ubuntu 24.04 LTS</div>
+      <div style="font-family:'JetBrains Mono',monospace; font-size:10px; color:#1e3a5f; margin-top:4px;">mycluster · node1 (192.168.1.10) ↔ node2 (192.168.1.11) · VIP 192.168.1.100</div>
+    </div>
+
+  </div>
+</div>
+</div>
